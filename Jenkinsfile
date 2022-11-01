@@ -1,4 +1,5 @@
 def imageName = 'mlabouardy/movies-store'
+def registry = 'public.ecr.aws/p1c2l2q2/mlabouardy/movies-store'
 
 
 node('workers'){
@@ -33,6 +34,12 @@ node('workers'){
     stage('Build'){
         docker.build(imageName)
     }
+    
+    stage('Push'){
+        docker.withRegistry(registry) {
+            docker.image(imageName).push(env.BUILD_ID)
+        }
+    }   
 
 }
 
