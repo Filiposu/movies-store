@@ -1,6 +1,6 @@
 def imageName = 'mlabouardy/movies-store'
-def registry = 'https://public.ecr.aws/p1c2l2q2/mlabouardy/movies-store'
-
+def registry = 'https://public.ecr.aws/p1c2l2q2'
+def region = 'eu-west-1'
 
 node('workers'){
     stage('Checkout'){
@@ -36,10 +36,17 @@ node('workers'){
     }
     
     stage('Push'){
-        docker.withRegistry(registry) {
-            docker.image(imageName).push(env.BUILD_ID)
+        
+       sh "aws ecr get-login-password --region ${region} |
+        docker login --username AWS
+        --password-stdin ${registry}/${imageName}"
+        
+        docker.image(imageName).push(commitID())
+        if (env.BRANCH_NAME == 'develop') {
+            docker.image(imageName).push('develop')
         }
-    }   
+        
+    }
 
 }
 
