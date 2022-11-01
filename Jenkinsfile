@@ -1,5 +1,5 @@
 def imageName = 'mlabouardy/movies-store'
-def registry = 'public.ecr.aws/p1c2l2q2/mlabouardy/movies-store'
+def registry = 'https://public.ecr.aws/p1c2l2q2/mlabouardy/movies-store'
 
 
 node('workers'){
